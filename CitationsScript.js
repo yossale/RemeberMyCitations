@@ -8,8 +8,8 @@ fixMainElementWidth();
 addLinksToSearchResults();
 
 function fixMainElementWidth() {
-    document.getElementById("gs_ccl").style.maxWidth = "800px";
-//    document.getElementById("rmc_btn_bibtex").onclick = clearCitations;
+    document.getElementById("gs_ccl").style.maxWidth = "600px";
+    $('div.gs_ggs').css({'left':'620px', 'white-space':'normal'});
 }
 
 function clearCitations() {
