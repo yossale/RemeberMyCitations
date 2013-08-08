@@ -1,7 +1,8 @@
 function CitationsViewer() {
+    this.bobo = this;
     this.versions = ["APA", "MLA", "Chicago"];
     var start = Date.now()
-    this.citationsMap = new CitationsRepository();
+    this.citationsRepository = new CitationsRepository();
     this.buildBibtexPane();
     console.log("Finished loading");
 }
@@ -14,7 +15,7 @@ CitationsViewer.prototype.addArticle = function (articleInfo) {
             var citePage = document.createElement('div');
             citePage.innerHTML = xmlhttp.responseText;
             self.addCitations(articleInfo.articleKey, citePage);
-            self.refreshCiteList(self.citationsMap);
+            self.refreshCiteList();
         }
     }
 
@@ -58,20 +59,23 @@ CitationsViewer.prototype.buildBibtexPane = function () {
         var end = Date.now();
         console.log("Building the tabs ended: " + ((end - start) / 1000) );
 
-        $('#rmc_btn_clear').onclick = self.clearAll;
-        self.refreshCiteList(self.citationsMap);
+//        document.getElementById("rmc_btn_clear").onclick = function(){alert("Clear button clicked! - Viewer")};
+        document.getElementById("rmc_btn_clear").onclick = function(){
+            console.log("Trying to clear all..");
+            self.clearAll()}
+        self.refreshCiteList();
     });
 }
 
-CitationsViewer.prototype.refreshCiteList = function (citationsMap) {
+CitationsViewer.prototype.refreshCiteList = function () {
     var self = this;
-    self.citationsMap.getCitationMap().keys().forEach(function (version) {
+    self.citationsRepository.getCitationMap().keys().forEach(function (version) {
         var id = "citationTable_" + version;
         var curTab = document.getElementById(version.toLowerCase() + "_tab");
         if (document.getElementById(id)) {
             curTab.removeChild(document.getElementById(id));
         }
-        var citationTable = self.generateCiteTable(self.citationsMap.getCitationMap().get(version));
+        var citationTable = self.generateCiteTable(self.citationsRepository.getCitationMap().get(version));
         citationTable.id = id;
         curTab.appendChild(citationTable);
     });
@@ -79,11 +83,14 @@ CitationsViewer.prototype.refreshCiteList = function (citationsMap) {
 
 
 CitationsViewer.prototype.getCitationMap = function () {
-    self.citationsMap.getCitationMap();
+    var self = this;
+    self.citationsRepository.getCitationMap();
 }
 
 CitationsViewer.prototype.clearAll = function () {
-    self.citationsMap.clearAll();
+    var self = this;
+    self.citationsRepository.clearAll();
+    self.refreshCiteList();
 }
 
 CitationsViewer.prototype.addCitations = function (articleKey, citePage) {
@@ -92,7 +99,7 @@ CitationsViewer.prototype.addCitations = function (articleKey, citePage) {
     arr.map(function (tr) {
         var key = tr.getElementsByClassName("gs_citf")[0].innerText;
         var value = tr.getElementsByClassName("gs_citr")[0].innerText;
-        self.citationsMap.addCitation(key,articleKey,value);
+        self.citationsRepository.addCitation(key,articleKey,value);
     });
 }
 

@@ -16,7 +16,7 @@
   
   "content_scripts": [
     {
-      "matches": ["http://scholar.google.co.il/*"],
+      "matches": ["http://scholar.google.co.il/*","http://scholar.google.com/*"],
       "js": ["jquery-1.10.2.js","jshashtable-3.0.js", "CitationsRespository.js", "CitationsViewer.js","CitationsScript.js"],
 	  "css": ["tabs.css"]
     }
