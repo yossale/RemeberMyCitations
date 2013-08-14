@@ -28,7 +28,7 @@ CitationsRepository.prototype.removeCitation = function (articleId) {
         jsonStr = jsonStr ? jsonStr : "[]";
         var hash = new Hashtable();
         hash.fromJsonString(jsonStr);
-        hash.removeEntryForKey(articleId);
+        hash.remove(articleId);
         localStorage.setItem(version, hash.toJsonString());
     });
 }

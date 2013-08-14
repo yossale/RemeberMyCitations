@@ -30,7 +30,7 @@ CitationsViewer.prototype.buildBibtexPane = function () {
     var self = this;
     $('#gs_res_bdy').prepend('<div id="citeListWrapper"></div>');
 
-    $.get(chrome.extension.getURL("citations.html"), function(data) {
+    $.get(chrome.extension.getURL("citations.html"), function (data) {
         var start = Date.now();
         console.log("Building the tabs started");
 
@@ -57,9 +57,9 @@ CitationsViewer.prototype.buildBibtexPane = function () {
         });
 
         var end = Date.now();
-        console.log("Building the tabs ended: " + ((end - start) / 1000) );
+        console.log("Building the tabs ended: " + ((end - start) / 1000));
 
-        document.getElementById("rmc_btn_clear").onclick = function(){
+        document.getElementById("rmc_btn_clear").onclick = function () {
             console.log("Trying to clear all..");
             self.clearAll()
         }
@@ -100,7 +100,7 @@ CitationsViewer.prototype.addCitations = function (articleKey, citePage) {
     arr.map(function (tr) {
         var key = tr.getElementsByClassName("gs_citf")[0].innerText;
         var value = tr.getElementsByClassName("gs_citr")[0].innerText;
-        self.citationsRepository.addCitation(key,articleKey,value);
+        self.citationsRepository.addCitation(key, articleKey, value);
     });
 }
 
@@ -115,24 +115,44 @@ CitationsViewer.prototype.generateCiteTable = function (versionList) {
     var citationsTable = document.createElement('table');
     citationsTable.className = "citationsTable";
 
-    versionList.entries().sort(function(a,b) {a[1] < b[1] ? 0 : 1}).forEach(function (arr) {
+    versionList.entries().sort(function (a, b) {
+        a[1] < b[1] ? 0 : 1
+    }).forEach(function (arr, index) {
 
         var key = arr[0];
         var value = arr[1];
-
-        var removeBtn = document.createElement("button");
-        removeBtn.className = ("rmcRemoveBtn");
-        removeBtn.onclick = function() {
-            self.citationsRepository.removeCitation(key)
-        }
 
         var tr = document.createElement('tr');
         var curCite = document.createElement('td');
         curCite.appendChild(document.createTextNode(value));
         tr.appendChild(curCite);
-        tr.appendChild(document.createElement("td").appendChild(removeBtn))
+        tr.appendChild(document.createElement("td").appendChild(self.generateRemoveButton(key, index)))
         citationsTable.appendChild(tr);
     });
 
     return citationsTable;
+}
+
+CitationsViewer.prototype.generateRemoveButton = function (citeKey, index) {
+
+    var self = this;
+
+
+//    var img = $('<div/>').append("<img id='theImg' src=" + chrome.extension.getURL("images/delete.ico") + "/>");
+
+    var btn = $('<button/>', {
+        text: "rmv", //set text 1 to 10
+        className: "rmc_rmvBtn",
+        icons: { primary: 'ui-icon-trash' },
+        id: 'rmc_rmvBtn_' + index,
+        click: function() {
+            console.log("Calling the remove button function");
+            self.citationsRepository.removeCitation(citeKey);
+            self.refreshCiteList();
+        }
+    });
+    btn.css('background-image', chrome.extension.getURL("images/delete.ico"));
+
+    return btn[0];
+
 }

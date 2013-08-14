@@ -92,3 +92,9 @@ a {
     border-spacing: 10px;
 }
 
+.rmcRemoveBtn {
+    width: 16px;
+    height: 16px;
+    /*background-image: url("images/delete.ico");*/
+}
+
