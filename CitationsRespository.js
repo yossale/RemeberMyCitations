@@ -22,7 +22,7 @@ CitationsRepository.prototype.addCitation = function (version, articleId, cite) 
     localStorage.setItem(version, hash.toJsonString());
 }
 
-CitationsRepository.prototype.removeCitation = function (articleId, cite) {
+CitationsRepository.prototype.removeCitation = function (articleId) {
     this.versions.map(function (version) {
         var jsonStr = localStorage.getItem(version);
         jsonStr = jsonStr ? jsonStr : "[]";

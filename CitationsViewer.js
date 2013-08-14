@@ -59,12 +59,10 @@ CitationsViewer.prototype.buildBibtexPane = function () {
         var end = Date.now();
         console.log("Building the tabs ended: " + ((end - start) / 1000) );
 
-        $("#rmc_btn_clear").click(self.clearAll);
-        //= function(){
-//        document.getElementById("rmc_btn_clear").onclick = function(){
-//            console.log("Trying to clear all..");
-//            self.clearAll()
-//        }
+        document.getElementById("rmc_btn_clear").onclick = function(){
+            console.log("Trying to clear all..");
+            self.clearAll()
+        }
 
         self.refreshCiteList();
     });
@@ -113,14 +111,26 @@ CitationsViewer.prototype.addCitations = function (articleKey, citePage) {
  * @returns {HTMLElement}
  */
 CitationsViewer.prototype.generateCiteTable = function (versionList) {
+    var self = this;
     var citationsTable = document.createElement('table');
     citationsTable.className = "citationsTable";
 
-    versionList.values().sort().forEach(function (value) {
+    versionList.entries().sort(function(a,b) {a[1] < b[1] ? 0 : 1}).forEach(function (arr) {
+
+        var key = arr[0];
+        var value = arr[1];
+
+        var removeBtn = document.createElement("button");
+        removeBtn.className = ("rmcRemoveBtn");
+        removeBtn.onclick = function() {
+            self.citationsRepository.removeCitation(key)
+        }
+
         var tr = document.createElement('tr');
         var curCite = document.createElement('td');
-        curCite.appendChild(document.createTextNode(value))
+        curCite.appendChild(document.createTextNode(value));
         tr.appendChild(curCite);
+        tr.appendChild(document.createElement("td").appendChild(removeBtn))
         citationsTable.appendChild(tr);
     });
 
