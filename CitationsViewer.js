@@ -1,7 +1,7 @@
 function CitationsViewer() {
     this.bobo = this;
     this.versions = ["APA", "MLA", "Chicago"];
-    var start = Date.now()
+    var start = Date.now();
     this.citationsRepository = new CitationsRepository();
     this.buildBibtexPane();
     console.log("Finished loading");
@@ -59,10 +59,13 @@ CitationsViewer.prototype.buildBibtexPane = function () {
         var end = Date.now();
         console.log("Building the tabs ended: " + ((end - start) / 1000) );
 
-//        document.getElementById("rmc_btn_clear").onclick = function(){alert("Clear button clicked! - Viewer")};
-        document.getElementById("rmc_btn_clear").onclick = function(){
-            console.log("Trying to clear all..");
-            self.clearAll()}
+        $("#rmc_btn_clear").click(self.clearAll);
+        //= function(){
+//        document.getElementById("rmc_btn_clear").onclick = function(){
+//            console.log("Trying to clear all..");
+//            self.clearAll()
+//        }
+
         self.refreshCiteList();
     });
 }
